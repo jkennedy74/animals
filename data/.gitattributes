@@ -1,0 +1,4 @@
+*.json filter=lfs diff=lfs merge=lfs -text
+*.sqlite filter=lfs diff=lfs merge=lfs -text
+animalData.sqlite filter=lfs diff=lfs merge=lfs -text
+animaldata.sqlite filter=lfs diff=lfs merge=lfs -text
