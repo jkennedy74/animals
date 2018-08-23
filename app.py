@@ -35,7 +35,8 @@ Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 
 # Assign the demographics class to a variable called `Demographics`
-Animals = Base.classes.animals
+Animals = Base.classes.animalsNew
+AnimalsCount = Base.classes.animalsPivot
 
 # base route
 @app.route("/")
@@ -46,7 +47,7 @@ def index():
 # route for returning all class names
 @app.route("/classes")
 def classes():
-    """Return a list of sample names."""
+    """Return a list of class names."""
 
     # results of the query
     results = db.session.query(Animals.s_class).all()
@@ -66,56 +67,120 @@ def classes():
 
     # remove items that are not needed
     class_names.remove("s_class")
-    class_names.remove("")
-    class_names.remove("Hutter_Madagascar_2016_2016-11-21_12:33")
 
     # sort the list
     class_names.sort()
 
     return jsonify(class_names)
 
-# route for returning animal geojson
-@app.route("/geojson/<s_class>")
-def animal_geojson(s_class):
+# route for returning all species names
+@app.route("/species")
+def species():
+    """Return a list of species names."""
+    # Selection to query
+    sel = [ 
+        Animals.species,
+        Animals.year]
+
+    # results of the query
+    results = db.session.query(*sel).all()
+
+    # empty list to append data to
+    species_names = []
+
+    # loop to append relevant data
+    for result in results:
+        if result[1] != "year" and int(result[1]) > 2009 and int(result[1]) < 2018:
+            species_names.append(result[0])
+
+    # return a set of unique values in the list
+    species_set = set(species_names)
+
+    # change the set back to a list
+    species_names = list(species_set)
+
+    # remove items that are not needed
+    species_names.remove("")
+
+    # sort the list
+    species_names.sort()
+
+    return jsonify(species_names)
+
+#route for returning animal geojson
+@app.route("/metadata/<species>")
+def animal_metadata(species):
+    """Return the MetaData for a given species"""
+
+    # Selection to query
+    sel = [
+        Animals.s_class, 
+        Animals.species,
+        Animals.scientificname,
+        Animals.taxonkey]
+
+    # results of the query
+    results = db.session.query(*sel).filter(Animals.species==species)
+
+    # empty list to append data to
+    oneSpecies = []
+
+    # loop to append relevant data
+    for result in results:
+        speciesDict = {
+            "s_class": result[0],
+            "species": result[1],
+            "scientific name": result[2].replace('\"',""),
+            "taxonkey": result[3]
+        }
+
+        oneSpecies.append(speciesDict)
+
+    return jsonify(oneSpecies[0])
+
+#route for returning animal geojson
+@app.route("/geojsonC/<s_class>")
+def class_geojson(s_class):
     """Return the MetaData for a given sample."""
 
     # Selection to query
     sel = [
         Animals.id,
-        Animals.eventDate, 
-        Animals.country,
+        Animals.eventdate,
+        Animals.year, 
+        Animals.countrycode,
         Animals.decimalLatitude,
         Animals.decimalLongitude,
         Animals.s_class]
 
     # results of the query
-    results = db.session.query(*sel).filter(Animals.s_class==s_class).order_by(Animals.eventDate)
+    results = db.session.query(*sel).filter(Animals.s_class==s_class).order_by(Animals.year)
 
     # empty list to append data to
     FeatureCollection = {"type": "FeatureCollection",
                 "metadata": {
-                "title": "Animal Counts"
+                "title": "Class Counts"
                 }}
 
     Features = []
 
     # loop to append relevant data
     for result in results:
-        if result[3] != "" and result[4] != "" and int(result[1][0:4]) > 1999 and int(result[1][0:4]) < 2013:
+        if result[4] != "" and result[5] != "" and int(result[2]) > 2009 and int(result[2]) < 2018:
             feature = {
                 "type": "Feature",
                 "properties": {
-                "place": result[2],
-                "year": result[1][0:4],
-                "start": time.mktime(datetime.datetime.strptime(f"{int(result[1][0:4])}-01-01", "%Y-%m-%d").timetuple()),
-                "end": time.mktime(datetime.datetime.strptime(f"{int(result[1][0:4])}-12-31", "%Y-%m-%d").timetuple()),
-                "type": result[5]
+                "place": result[3],
+                "date": time.mktime(datetime.datetime.strptime(result[1], "%m/%d/%Y").timetuple()),
+                "start": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-01-01", "%Y-%m-%d").timetuple()),
+                "end": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-12-31", "%Y-%m-%d").timetuple()),
+                "s_class": result[6]
                 },
                 "geometry": {
                 "type": "Point",
                 "coordinates": [
-                float(result[4]),
-                float(result[3])
+                float(result[5]),
+                float(result[4])
                 ]
                 },
                 "id": int(result[0])
@@ -127,35 +192,65 @@ def animal_geojson(s_class):
 
     return jsonify(FeatureCollection)
 
-# route for returning sample metadata
-@app.route("/year/<s_class>")
-def animal_year(s_class):
+#route for returning animal geojson
+@app.route("/geojsonS/<species>")
+def species_geojson(species):
     """Return the MetaData for a given sample."""
 
     # Selection to query
     sel = [
-        Animals.eventDate]
+        Animals.id,
+        Animals.eventdate,
+        Animals.year, 
+        Animals.countrycode,
+        Animals.decimalLatitude,
+        Animals.decimalLongitude,
+        Animals.s_class,
+        Animals.species,
+        Animals.taxonkey,
+        Animals.scientificname]
 
     # results of the query
-    results = db.session.query(*sel).filter(Animals.s_class==s_class)
+    results = db.session.query(*sel).filter(Animals.species==species).order_by(Animals.year)
 
     # empty list to append data to
-    years = []
+    FeatureCollection = {"type": "FeatureCollection",
+                "metadata": {
+                "title": "Species Counts"
+                }}
 
-     # loop to append relevant data
+    Features = []
+
+    # loop to append relevant data
     for result in results:
-        years.append(result[0][0:4])
+        if result[4] != "" and result[5] != "" and int(result[2]) > 2009 and int(result[2]) < 2018:
+            feature = {
+                "type": "Feature",
+                "properties": {
+                "place": result[3],
+                "date": time.mktime(datetime.datetime.strptime(result[1], "%m/%d/%Y").timetuple()),
+                "start": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-01-01", "%Y-%m-%d").timetuple()),
+                "end": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-12-31", "%Y-%m-%d").timetuple()),
+                "s_class": result[6],
+                "species": result[7],
+                "taxonkey": result[8],
+                "scientific_name": result[9].replace('\"',"")
+                },
+                "geometry": {
+                "type": "Point",
+                "coordinates": [
+                float(result[5]),
+                float(result[4])
+                ]
+                },
+                "id": int(result[0])
+            }
+            
+            Features.append(feature)
 
-    # return a set of unique values in the list
-    year_set = set(years)
+    FeatureCollection["features"] = Features
 
-    # change the set back to a list
-    years = list(year_set)
-
-    # sort the list
-    years.sort()
-
-    return jsonify(years)
+    return jsonify(FeatureCollection)
 
 
 if __name__ == "__main__":
