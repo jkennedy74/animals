@@ -39,7 +39,7 @@ mysql = MySQL(app)
 @app.route('/test')
 def animals():
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM animal.animals''')
+    cur.execute('''SELECT * FROM heroku_724a6776f62a58d.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
 
@@ -60,7 +60,7 @@ def classes():
     """Return a list of class names."""
 
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT s_class FROM animal.animals''')
+    cur.execute('''SELECT s_class FROM heroku_724a6776f62a58d.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
 
@@ -74,7 +74,7 @@ def species():
     """Return a list of species and years."""
 
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT species, year FROM animal.animals''')
+    cur.execute('''SELECT species, year FROM heroku_724a6776f62a58d.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
 
@@ -84,7 +84,7 @@ def animal_metadata(species):
     """Return the MetaData for a given species"""
 
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT s_class, species, scientificname, taxonkey FROM animal.animals''')
+    cur.execute('''SELECT s_class, species, scientificname, taxonkey FROM heroku_724a6776f62a58d.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
 
@@ -96,7 +96,7 @@ def class_geojson(s_class):
     """Return the MetaData for a given sample."""
     
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT id, eventdate, year, countrycode, decimallatitude, decimallongitude, s_class FROM animal.animals''')
+    cur.execute('''SELECT id, eventdate, year, countrycode, decimallatitude, decimallongitude, s_class FROM heroku_724a6776f62a58d.animals''')
     results = cur.fetchall()
     # empty list to append data to
     FeatureCollection = {"type": "FeatureCollection",
@@ -142,7 +142,7 @@ def species_geojson(species):
     """Return the MetaData for a given sample."""
 
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT id, eventdate, year, countrycode, decimalLatitude, decimalLongitude, s_class, species, scientificname, taxonkey FROM animal.animals''')
+    cur.execute('''SELECT id, eventdate, year, countrycode, decimalLatitude, decimalLongitude, s_class, species, scientificname, taxonkey FROM heroku_724a6776f62a58d.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
     # Selection to query
