@@ -93,10 +93,10 @@ function buildClassGeo(s_class) {
       getInterval: getInterval,
       pointToLayer: function(data, latlng){
         return L.circleMarker(latlng, {
-          radius: 20,
+          radius: 10,
           color: "black",
           weight: 1,
-          fillColor: "blue",
+          fillColor: "red",
           fillOpacity: 0.05
         })
       }
