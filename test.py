@@ -18,11 +18,20 @@ import datetime
 
 from flask_mysqldb import MySQL
 
+## mysql://bb43e756cddd2f:5e6891d5@us-cdbr-iron-east-01.cleardb.net/heroku_724a6776f62a58d?reconnect=true
+
 app = Flask(__name__)
 
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'jkennedy'
-app.config['MYSQL_DB'] = 'animal'
+# to run locally uncomment
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = 'jkennedy'
+# app.config['MYSQL_DB'] = 'animal'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+app.config['MYSQL_USER'] = 'bb43e756cddd2f'
+app.config['MYSQL_PASSWORD'] = '5e6891d5'
+app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-01.cleardb.net'
+app.config['MYSQL_DB'] = 'heroku_724a6776f62a58d'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -68,6 +77,17 @@ def species():
     cur.execute('''SELECT species, year FROM animal.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
+
+
+@app.route("/metadata/<species>")
+def animal_metadata(species):
+    """Return the MetaData for a given species"""
+
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT s_class, species, scientificname, taxonkey FROM animal.animals''')
+    rv = cur.fetchall()
+    return jsonify(rv)
+
 #route for returning animal geojson
 
 
@@ -122,7 +142,7 @@ def species_geojson(species):
     """Return the MetaData for a given sample."""
 
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT id, eventdate, year, countrycode, decimalLatitude, decimalLongitude, s_class, species, taxonkey FROM animal.animals''')
+    cur.execute('''SELECT id, eventdate, year, countrycode, decimalLatitude, decimalLongitude, s_class, species, scientificname, taxonkey FROM animal.animals''')
     rv = cur.fetchall()
     return jsonify(rv)
     # Selection to query
