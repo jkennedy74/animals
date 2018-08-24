@@ -14,12 +14,6 @@ import datetime
 
 app = Flask(__name__)
 
-# to run locally uncomment
-# app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = 'jkennedy'
-# app.config['MYSQL_DB'] = 'animal'
-# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-
 app.config['MYSQL_USER'] = 'bb43e756cddd2f'
 app.config['MYSQL_PASSWORD'] = '5e6891d5'
 app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-01.cleardb.net'
@@ -89,42 +83,45 @@ def class_geojson(s_class):
     
     cur = mysql.connection.cursor()
     cur.execute('''SELECT id, eventdate, year, countrycode, decimallatitude, decimallongitude, s_class FROM heroku_724a6776f62a58d.animals''')
-    results = cur.fetchall()
-    # empty list to append data to
-    FeatureCollection = {"type": "FeatureCollection",
-                         "metadata": {
-                             "title": "Class Counts"
-                         }}
+    rv = cur.fetchall()
+    return jsonify(rv)
 
-    Features = []
+    # results = cur.fetchall()
+    # # empty list to append data to
+    # FeatureCollection = {"type": "FeatureCollection",
+    #                      "metadata": {
+    #                          "title": "Class Counts"
+    #                      }}
 
-    # loop to append relevant data
-    for result in results:
-        if result[4] != "" and result[5] != "" and int(result[2]) > 2009 and int(result[2]) < 2018:
-            feature = {
-                "type": "Feature",
-                "properties": {
-                    "place": result[3],
-                    "date": time.mktime(datetime.datetime.strptime(result[1], "%m/%d/%Y").timetuple()),
-                    "start": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-01-01", "%Y-%m-%d").timetuple()),
-                    "end": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-12-31", "%Y-%m-%d").timetuple()),
-                    "s_class": result[6]
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        float(result[5]),
-                        float(result[4])
-                    ]
-                },
-                "id": int(result[0])
-            }
+    # Features = []
 
-            Features.append(feature)
+    # # loop to append relevant data
+    # for result in results:
+    #     if result[4] != "" and result[5] != "" and int(result[2]) > 2009 and int(result[2]) < 2018:
+    #         feature = {
+    #             "type": "Feature",
+    #             "properties": {
+    #                 "place": result[3],
+    #                 "date": time.mktime(datetime.datetime.strptime(result[1], "%m/%d/%Y").timetuple()),
+    #                 "start": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-01-01", "%Y-%m-%d").timetuple()),
+    #                 "end": time.mktime(datetime.datetime.strptime(f"{int(result[2])}-12-31", "%Y-%m-%d").timetuple()),
+    #                 "s_class": result[6]
+    #             },
+    #             "geometry": {
+    #                 "type": "Point",
+    #                 "coordinates": [
+    #                     float(result[5]),
+    #                     float(result[4])
+    #                 ]
+    #             },
+    #             "id": int(result[0])
+    #         }
 
-    FeatureCollection["features"] = Features
+    #         Features.append(feature)
 
-    return jsonify(FeatureCollection)
+    # FeatureCollection["features"] = Features
+
+    # return jsonify(FeatureCollection)
 
 
 
