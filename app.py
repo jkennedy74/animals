@@ -25,7 +25,7 @@ app = Flask(__name__)
 # Database Setup
 #################################################
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data/animalData.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/animalData.sqlite"
 db = SQLAlchemy(app)
 
 # Declare a Base using `automap_base()`
