@@ -15,6 +15,13 @@ import numpy as np
 import pandas as pd
 import time
 import datetime
+import exceptions
+
+
+# Handle Database Error
+class DatabaseError(Error):
+    pass
+
 
 #################################################
 # Flask Setup
