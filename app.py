@@ -4,19 +4,11 @@ from flask import (
     jsonify,
     render_template,
     redirect)
-
-import sqlalchemy
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session, load_only
-from sqlalchemy import create_engine, func
-from flask_sqlalchemy import SQLAlchemy
-
+from flask_mysqldb import MySQL
 import numpy as np
 import pandas as pd
 import time
 import datetime
-
-from flask_mysqldb import MySQL
 
 ## mysql://bb43e756cddd2f:5e6891d5@us-cdbr-iron-east-01.cleardb.net/heroku_724a6776f62a58d?reconnect=true
 
