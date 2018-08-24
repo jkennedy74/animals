@@ -1,1 +1,0 @@
-const-naming-style="camelCase"
