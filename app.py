@@ -98,8 +98,8 @@ def species():
 
     # loop to append relevant data
     for result in results:
-        if result["year"] != "year" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
-            species_names.append(result["species"])
+            if result["year"] != "year" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
+                species_names.append(result["species"])
 
     # return a set of unique values in the list
     species_set = set(species_names)
@@ -133,27 +133,28 @@ def class_geojson(s_class):
 
     # loop to append relevant data
     for result in results:
-        if result["decimallatitude"] != "" and result["decimallongitude"] != "" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
-            feature = {
-                "type": "Feature",
-                "properties": {
-                    "place": result["countrycode"],
-                    "date": time.mktime(datetime.datetime.strptime(result["eventdate"], "%m/%d/%Y").timetuple()),
-                    "start": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-01-01", "%Y-%m-%d").timetuple()),
-                    "end": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-12-31", "%Y-%m-%d").timetuple()),
-                    "s_class": result["s_class"]
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [
-                        float(result["decimallongitude"]),
-                        float(result["decimallatitude"])
-                    ]
-                },
-                "id": int(result["id"])
-            }
+        if result["s_class"] == s_class:
+            if result["decimallatitude"] != "" and result["decimallongitude"] != "" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
+                feature = {
+                    "type": "Feature",
+                    "properties": {
+                        "place": result["countrycode"],
+                        "date": time.mktime(datetime.datetime.strptime(result["eventdate"], "%m/%d/%Y").timetuple()),
+                        "start": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-01-01", "%Y-%m-%d").timetuple()),
+                        "end": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-12-31", "%Y-%m-%d").timetuple()),
+                        "s_class": result["s_class"]
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                            float(result["decimallongitude"]),
+                            float(result["decimallatitude"])
+                        ]
+                    },
+                    "id": int(result["id"])
+                }
 
-            Features.append(feature)
+                Features.append(feature)
 
     FeatureCollection["features"] = Features
 
@@ -178,30 +179,31 @@ def species_geojson(species):
 
     # loop to append relevant data
     for result in results:
-        if result["decimalLatitude"] != "" and result["decimalLongitude"] != "" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
-            feature = {
-                "type": "Feature",
-                "properties": {
-                "place": result["countrycode"],
-                "date": time.mktime(datetime.datetime.strptime(result["eventdate"], "%m/%d/%Y").timetuple()),
-                "start": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-01-01", "%Y-%m-%d").timetuple()),
-                "end": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-12-31", "%Y-%m-%d").timetuple()),
-                "s_class": result["s_class"],
-                "species": result["species"],
-                "taxonkey": result["taxonkey"],
-                "scientific_name": result["scientificname"].replace('\"',"")
-                },
-                "geometry": {
-                "type": "Point",
-                "coordinates": [
-                float(result["decimalLongitude"]),
-                float(result["decimalLatitude"])
-                ]
-                },
-                "id": int(result["id"])
-            }
-            
-            Features.append(feature)
+        if result["species"] == species:
+            if result["decimalLatitude"] != "" and result["decimalLongitude"] != "" and int(result["year"]) > 2009 and int(result["year"]) < 2018:
+                feature = {
+                    "type": "Feature",
+                    "properties": {
+                    "place": result["countrycode"],
+                    "date": time.mktime(datetime.datetime.strptime(result["eventdate"], "%m/%d/%Y").timetuple()),
+                    "start": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-01-01", "%Y-%m-%d").timetuple()),
+                    "end": time.mktime(datetime.datetime.strptime(f"{int(result['year'])}-12-31", "%Y-%m-%d").timetuple()),
+                    "s_class": result["s_class"],
+                    "species": result["species"],
+                    "taxonkey": result["taxonkey"],
+                    "scientific_name": result["scientificname"].replace('\"',"")
+                    },
+                    "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    float(result["decimalLongitude"]),
+                    float(result["decimalLatitude"])
+                    ]
+                    },
+                    "id": int(result["id"])
+                }
+                
+                Features.append(feature)
 
     FeatureCollection["features"] = Features
 
