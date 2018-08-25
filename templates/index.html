@@ -30,7 +30,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand navbar-dark bg-primary">
     <a class="navbar-brand" href="#">Deforestation and Species Observation</a>
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
@@ -38,13 +38,13 @@
           <a class="nav-link" href="#">DataViz <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Class API</a>
+          <a class="nav-link" href="https://deforestation.herokuapp.com/classes" target="blank">Class API</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Species API</a>
+          <a class="nav-link" href="https://deforestation.herokuapp.com/species" target="blank">Species API</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Comprehensive API</a>
+          <a class="nav-link" href="https://deforestation.herokuapp.com/test" target="blank">Comprehensive API</a>
         </li>
       </ul>
 
@@ -57,33 +57,33 @@
         <div class="row">
           <div id="map-id"></div>
         </div>
-          <div class="row">
-            <div class="col-md-5">
-              <div class="form-group text-dark">
-                <div class="class-select">
-                  <label for="classSelect">Select a Class</label>
-                  <select class="form-control alert-primary" id="classSelect" onchange="optionClassChanged(this.value)">
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="form-group text-dark">
-                <div class="species-select">
-                  <label for="speciesSelect">Select a Species</label>
-                  <select class="form-control alert-primary" id="speciesSelect" onchange="optionSpeciesChanged(this.value)">
-                  </select>
-                </div>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group list-group-item-heading">
+              <div class="class-select">
+                <label for="classSelect">Select a Class</label>
+                <select class="form-control" id="classSelect" onchange="optionClassChanged(this.value)">
+                </select>
               </div>
             </div>
           </div>
+          <div class="col-md-5">
+            <div class="form-group list-group-item-heading">
+              <div class="species-select">
+                <label for="speciesSelect">Select a Species</label>
+                <select class="form-control" id="speciesSelect" onchange="optionSpeciesChanged(this.value)">
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
       </div>
       <div class="col-md-2">
-        <h1>hullo</h1>
+        <h3>Selection Detail</h3>
 
-        <div class="alert alert-dismissible alert-success" id="info">
+        <div class="glyphicon-globe alert-dismissible alert-success" id="info">
           <p>Now viewing...</p>
         </div>
       </div>
@@ -92,15 +92,43 @@
 
   </div>
   <!-- end of jumbotron -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
-    <a class="navbar-brand" href="#">Navbar</a>
-  
+  <nav class="navbar navbar-expand navbar-light bg-light fixed-bottom">
+    <a class="navbar-brand" href="#">Resources</a>
+
     <div class="collapse navbar-collapse" id="navbarColor03">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Git Repository</a>
+          <a class="nav-link" href="https://github.com/jkennedy74/animals">Project Repository</a>
         </li>
       </ul>
+      <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          JS and Python Libraries
+        </button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item-text text-dark">JavaScript</div>
+          <a class="dropdown-item" href="https://leafletjs.com/" target="blank">Leaflet</a>
+          <a class="dropdown-item" href="https://esri.github.io/esri-leaflet/" target="blank">ESRI-Leaflet</a>
+          <a class="dropdown-item" href="http://skeate.github.io/Leaflet.timeline/" target="blank">Leaflet.Timeline</a>
+          <a class="dropdown-item" href="https://momentjs.com/" target="blank">Moment</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item-text text-dark">Python</div>
+          <a class="dropdown-item" href="https://mysqlclient.readthedocs.io/" target="blank">MySQLdb</a>
+          <a class="dropdown-item" href="https://flask-mysqldb.readthedocs.io/en/latest/" target="blank">Flask-MySQLdb</a>
+        </div>
+      </div>
+
+      <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Data Sources      
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="https://www.gbif.org/dataset/36f15a36-6b45-442e-9c31-cd633423aee0" target="blank">Field Museum</a>
+          <a class="dropdown-item" href="http://data.globalforestwatch.org/" target="blank">Global Forest Watch</a>
+        </div>
+      </div>
+
+
     </div>
   </nav>
 
